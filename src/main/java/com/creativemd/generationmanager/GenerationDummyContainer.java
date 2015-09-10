@@ -16,7 +16,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
-import com.creativemd.craftingmanager.api.common.utils.entry.StateEntry;
 import com.creativemd.generationmanager.config.WorldConfig;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -24,6 +23,9 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import cpw.mods.fml.common.DummyModContainer;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLContainer;
+import cpw.mods.fml.common.FMLModContainer;
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.Loader;
@@ -220,12 +222,8 @@ public class GenerationDummyContainer extends DummyModContainer {
 	@Subscribe
 	public void init(FMLInitializationEvent evt) {
 		MinecraftForge.EVENT_BUS.register(new ChunkHandler());
-		try{
-			if(Class.forName("com.creativemd.craftingmanager.api.core.ConfigRegistry") != null)
-			{
-				WorldConfig.startConfig();
-			}
-		}catch(Exception e){}
+		if(Loader.isModLoaded("ingameconfigmanager"))
+			WorldConfig.startConfig();
 		
 		//GameRegistry.registerWorldGenerator(new WorldTestGenerator(), 0);
 	}
@@ -233,7 +231,10 @@ public class GenerationDummyContainer extends DummyModContainer {
 	@Subscribe
 	public void preInit(FMLPreInitializationEvent evt) {
 		configuration = new Configuration(evt.getSuggestedConfigurationFile());
+		configuration.load();
+		configuration.addCustomCategoryComment("general", "0: nothing, 1: regenerate, 2: ungenerate");
 		active = configuration.get("general", "active", false).getBoolean(false);
+		configuration.save();
 	}
 
 	@Subscribe
