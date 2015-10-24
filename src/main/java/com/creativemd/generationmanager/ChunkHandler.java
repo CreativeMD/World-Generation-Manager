@@ -50,6 +50,8 @@ public class ChunkHandler {
 		if(GenerationDummyContainer.active)
 		{
 			String[] chunkmods = modsGenerated(event.getChunk());	
+			if(chunkmods == null)
+				chunkmods = new String[0];
 			List<String> newmods = new ArrayList<String>();
 			
 			boolean hasregenerate = false;
@@ -141,6 +143,8 @@ public class ChunkHandler {
 	
 	public static boolean contains(Object[] array, Object jar)
 	{
+		if(array == null)
+			return false;
 		for(int zahl = 0; zahl < array.length; zahl++)
 			if(array[zahl].equals(jar))return true;
 		return false;
