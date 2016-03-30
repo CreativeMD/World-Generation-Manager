@@ -1,31 +1,35 @@
 package com.creativemd.generationmanager;
 
-import static org.objectweb.asm.Opcodes.*;
-import static org.objectweb.asm.tree.AbstractInsnNode.METHOD_INSN;
+import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.ILOAD;
+import static org.objectweb.asm.Opcodes.INVOKESTATIC;
+import static org.objectweb.asm.Opcodes.RETURN;
 
 import java.io.File;
-import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.Iterator;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 public class GenerationTransformer implements IClassTransformer {
-
-	//NOTE: This doesn't work for some cases like EntityItem and EntityItemFrame
+	
 	public static final String[] names = new String[]{".", "net/minecraft/world/chunk/Chunk", "net/minecraft/world/World",
-		"net/minecraft/world/chunk/IChunkProvider"};
-	public static final String[] namesOb = new String[]{"/", "apx", "ahb", "apu"};
+		"net/minecraft/world/chunk/IChunkProvider", "net/minecraft/world/chunk/IChunkGenerator"};
+	public static final String[] namesOb = new String[]{"/", "ase", "aht", "arz", "ary"};
 	
 	public static String patch(String input)
 	{
@@ -36,15 +40,15 @@ public class GenerationTransformer implements IClassTransformer {
 		
 	@Override
 	public byte[] transform(String arg0, String arg1, byte[] arg2) {
-		if (arg0.equals("apx") | arg0.equals("net.minecraft.world.chunk.Chunk")) {
+		if (arg0.equals("ase") | arg0.equals("net.minecraft.world.chunk.Chunk")) {
 			System.out.println("[GenerationManager] Patching " + arg0);
 			arg2 = addMethod(arg0, arg2, GenerationPatchingLoader.location, !arg0.equals(arg1));
 		}
-		if (arg0.equals("cpw.mods.fml.common.registry.GameRegistry")) {
+		if (arg0.equals("net.minecraftforge.fml.common.registry.GameRegistry")) {
 			System.out.println("[GenerationManager] Patching " + arg0);
 			arg2 = changeRegistry(arg0, arg2, GenerationPatchingLoader.location, !arg0.equals(arg1));
 		}
-		if (arg0.equals("cpw.mods.fml.common.IWorldGenerator")) {
+		if (arg0.equals("net.minecraftforge.fml.common.IWorldGenerator")) {
 			System.out.println("[GenerationManager] Patching " + arg0);
 			arg2 = addIDMethod(arg0, arg2, GenerationPatchingLoader.location, !arg0.equals(arg1));
 		}
@@ -55,8 +59,8 @@ public class GenerationTransformer implements IClassTransformer {
 	{
 		String targetMethodName = "registerWorldGenerator";
 		String targetMethodName2 = "generateWorld";
-		String targetDESC = "(Lcpw/mods/fml/common/IWorldGenerator;I)V";
-		String targetDESC2 = "(IILnet/minecraft/world/World;Lnet/minecraft/world/chunk/IChunkProvider;Lnet/minecraft/world/chunk/IChunkProvider;)V";
+		String targetDESC = "(Lnet/minecraftforge/fml/common/IWorldGenerator;I)V";
+		String targetDESC2 = "(IILnet/minecraft/world/World;Lnet/minecraft/world/chunk/IChunkGenerator;Lnet/minecraft/world/chunk/IChunkProvider;)V";
 		String fieldName = "sortedGeneratorList";
 		String targetMethodName3 = "computeSortedGeneratorList";
 		
@@ -105,7 +109,7 @@ public class GenerationTransformer implements IClassTransformer {
 					{
 						m.instructions.insertBefore(currentNode, new LabelNode());
 						m.instructions.insertBefore(currentNode, new VarInsnNode(ALOAD, 0));
-						m.instructions.insertBefore(currentNode, new MethodInsnNode(INVOKESTATIC, "com/creativemd/generationmanager/GenerationDummyContainer", "onAdd", "(Lcpw/mods/fml/common/IWorldGenerator;)V"));//, "(Ljava/util/Set<Lcpw/mods/fml/common/IWorldGenerator;>;)V"));
+						m.instructions.insertBefore(currentNode, new MethodInsnNode(INVOKESTATIC, "com/creativemd/generationmanager/GenerationDummyContainer", "onAdd", "(Lnet/minecraftforge/fml/common/IWorldGenerator;)V", false));//, "(Ljava/util/Set<Lcpw/mods/fml/common/IWorldGenerator;>;)V"));
 						//m.instructions.insert(currentNode, new VarInsnNode(ALOAD, 0));
 					}
 				}
@@ -124,7 +128,7 @@ public class GenerationTransformer implements IClassTransformer {
 				m.instructions.add(new VarInsnNode(ALOAD, 2));
 				m.instructions.add(new VarInsnNode(ALOAD, 3));
 				m.instructions.add(new VarInsnNode(ALOAD, 4));
-				m.instructions.add(new MethodInsnNode(INVOKESTATIC, "com/creativemd/generationmanager/GenerationDummyContainer", "generateWorld", targetDESC2));
+				m.instructions.add(new MethodInsnNode(INVOKESTATIC, "com/creativemd/generationmanager/GenerationDummyContainer", "generateWorld", targetDESC2, false));
 				m.instructions.add(new InsnNode(Opcodes.RETURN));
 			}
 			if (m.name.equals(targetMethodName3))

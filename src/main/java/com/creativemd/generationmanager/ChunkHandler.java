@@ -6,16 +6,16 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.event.world.ChunkDataEvent.Save;
 import net.minecraftforge.event.world.ChunkEvent.Load;
-import cpw.mods.fml.common.IWorldGenerator;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChunkHandler {
 	
@@ -46,7 +46,7 @@ public class ChunkHandler {
 	@SubscribeEvent
 	public void onChunkLoad(Load event)
 	{
-		if(!event.getChunk().isTerrainPopulated)return ;
+		if(!event.getChunk().isTerrainPopulated())return ;
 		if(GenerationDummyContainer.active)
 		{
 			String[] chunkmods = modsGenerated(event.getChunk());	
@@ -60,17 +60,18 @@ public class ChunkHandler {
 				if(!contains(chunkmods, GenerationDummyContainer.worldGenerators.get(zahl).name) && GenerationDummyContainer.worldGenerators.get(zahl).isActive())
 				{
 					//Regenerate
-					long worldSeed = event.world.getSeed();
+					long worldSeed = event.getWorld().getSeed();
 			        Random fmlRandom = new Random(worldSeed);
 			        long xSeed = fmlRandom.nextLong() >> 2 + 1L;
 			        long zSeed = fmlRandom.nextLong() >> 2 + 1L;
 			        fmlRandom.setSeed((xSeed * event.getChunk().xPosition + zSeed * event.getChunk().zPosition) ^ worldSeed);
 			        
-		        	if(event.world instanceof WorldServer)
+		        	if(event.getWorld() instanceof WorldServer)
 		        	{
-		        		IChunkProvider provider1 = event.world.getChunkProvider();
-		        		IChunkProvider provider2 = ((WorldServer)event.world).theChunkProviderServer;
-		        		GenerationDummyContainer.worldGenerators.get(zahl).generator.generate(fmlRandom, event.getChunk().xPosition, event.getChunk().zPosition, event.world, provider1, provider2);
+		        		ChunkProviderServer provider1 =  (ChunkProviderServer) event.getWorld().getChunkProvider();
+		        		IChunkGenerator generator = provider1.chunkGenerator;
+		        		IChunkProvider provider2 = event.getWorld().getChunkProvider();
+		        		GenerationDummyContainer.worldGenerators.get(zahl).generator.generate(fmlRandom, event.getChunk().xPosition, event.getChunk().zPosition, event.getWorld(), generator, provider2);
 		        	}
 			        	
 			        newmods.add(GenerationDummyContainer.worldGenerators.get(zahl).name);
@@ -80,16 +81,18 @@ public class ChunkHandler {
 					for (int x = 0; x < 16; x++) {
 						for (int y = 0; y < 256; y++) {
 							for (int z = 0; z < 16; z++) {
-								String name = Block.blockRegistry.getNameForObject(event.getChunk().getBlock(x, y, z));;
+								BlockPos pos = new BlockPos(x, y, z);
+								String name = Block.blockRegistry.getNameForObject(event.getChunk().getBlockState(pos).getBlock()).toString();
 								String[] names = name.split(":");
 								if(names.length > 1 && names[0].equals(modID))
 								{
+							
 									if(y < 50)
-										event.getChunk().func_150807_a(x, y, z, Blocks.stone, 0);
+										event.getChunk().setBlockState(pos, Blocks.stone.getDefaultState());
 									else if(y <= 64)
-										event.getChunk().func_150807_a(x, y, z, Blocks.dirt, 0);
+										event.getChunk().setBlockState(pos, Blocks.dirt.getDefaultState());
 									else
-										event.getChunk().func_150807_a(x, y, z, Blocks.air, 0);
+										event.getChunk().setBlockState(pos, Blocks.air.getDefaultState());
 								}
 							}
 						}

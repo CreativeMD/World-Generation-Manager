@@ -2,40 +2,28 @@ package com.creativemd.generationmanager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
-import org.objectweb.asm.tree.MethodNode;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-
-import com.creativemd.generationmanager.config.WorldConfig;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import cpw.mods.fml.common.DummyModContainer;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLContainer;
-import cpw.mods.fml.common.FMLModContainer;
-import cpw.mods.fml.common.IWorldGenerator;
-import cpw.mods.fml.common.LoadController;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.event.FMLConstructionEvent;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.IWorldGenerator;
+import net.minecraftforge.fml.common.LoadController;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class GenerationDummyContainer extends DummyModContainer {
 
@@ -44,13 +32,12 @@ public class GenerationDummyContainer extends DummyModContainer {
 		super(new ModMetadata());
 		ModMetadata meta = getMetadata();
 		meta.modId = "generationmanager";
-		meta.name = "Generation Manager Core";
-		meta.version = "0.4.1";
+		meta.name = "Generation Manager";
+		meta.version = "0.4.4";
 		meta.credits = "CreativeMD";
 		meta.authorList = Arrays.asList("CreativeMD");
 		meta.description = "";
 		meta.url = "http://www.minecraftforum.net/topic/1879772-";
-		meta.updateUrl = "";
 		meta.screenshots = new String[0];
 		meta.logoFile = "";
 	}
@@ -70,7 +57,7 @@ public class GenerationDummyContainer extends DummyModContainer {
 		return null;
 	}
 	
-	public static void generateWorld(int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+	public static void generateWorld(int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
     {
         if(getField("sortedGeneratorList") == null)
         {
@@ -130,7 +117,7 @@ public class GenerationDummyContainer extends DummyModContainer {
 		}
 	}
 	
-	public static boolean isEnabled(IWorldGenerator generator)
+	/*public static boolean isEnabled(IWorldGenerator generator)
 	{
 		if(isEnabled(generator))
 		{
@@ -148,7 +135,7 @@ public class GenerationDummyContainer extends DummyModContainer {
 			generator.generate(fmlRandom, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
 		}
 		return false;
-	}
+	}*/
 	
 	public static String getName(IWorldGenerator generator)
 	{
@@ -222,8 +209,6 @@ public class GenerationDummyContainer extends DummyModContainer {
 	@Subscribe
 	public void init(FMLInitializationEvent evt) {
 		MinecraftForge.EVENT_BUS.register(new ChunkHandler());
-		if(Loader.isModLoaded("ingameconfigmanager"))
-			WorldConfig.startConfig();
 		
 		//GameRegistry.registerWorldGenerator(new WorldTestGenerator(), 0);
 	}

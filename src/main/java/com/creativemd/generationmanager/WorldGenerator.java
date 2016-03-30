@@ -1,6 +1,6 @@
 package com.creativemd.generationmanager;
 
-import cpw.mods.fml.common.IWorldGenerator;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 public class WorldGenerator {
 	

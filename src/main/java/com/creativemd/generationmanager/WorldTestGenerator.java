@@ -3,18 +3,20 @@ package com.creativemd.generationmanager;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
-import cpw.mods.fml.common.IWorldGenerator;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 public class WorldTestGenerator implements IWorldGenerator {
 
 	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world,
-			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-		Block block = Block.getBlockFromName("diamond_block");
+	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider){
 		for(int zahl = 100; zahl < 120; zahl++)
-			world.setBlock(chunkX*16, zahl, chunkZ*16, block, 0, 2);
+			world.setBlockState(new BlockPos(chunkX*16, zahl, chunkZ*16), Blocks.diamond_block.getDefaultState(), 0);
 	}
 	
 	public String getName()
