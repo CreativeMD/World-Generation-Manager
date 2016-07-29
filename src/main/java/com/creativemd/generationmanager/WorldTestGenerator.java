@@ -16,7 +16,7 @@ public class WorldTestGenerator implements IWorldGenerator {
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider){
 		for(int zahl = 100; zahl < 120; zahl++)
-			world.setBlockState(new BlockPos(chunkX*16, zahl, chunkZ*16), Blocks.diamond_block.getDefaultState(), 0);
+			world.setBlockState(new BlockPos(chunkX*16, zahl, chunkZ*16), Blocks.DIAMOND_BLOCK.getDefaultState(), 0);
 	}
 	
 	public String getName()

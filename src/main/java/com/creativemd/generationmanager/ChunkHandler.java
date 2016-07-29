@@ -82,17 +82,17 @@ public class ChunkHandler {
 						for (int y = 0; y < 256; y++) {
 							for (int z = 0; z < 16; z++) {
 								BlockPos pos = new BlockPos(x, y, z);
-								String name = Block.blockRegistry.getNameForObject(event.getChunk().getBlockState(pos).getBlock()).toString();
+								String name = Block.REGISTRY.getNameForObject(event.getChunk().getBlockState(pos).getBlock()).toString();
 								String[] names = name.split(":");
 								if(names.length > 1 && names[0].equals(modID))
 								{
 							
 									if(y < 50)
-										event.getChunk().setBlockState(pos, Blocks.stone.getDefaultState());
+										event.getChunk().setBlockState(pos, Blocks.STONE.getDefaultState());
 									else if(y <= 64)
-										event.getChunk().setBlockState(pos, Blocks.dirt.getDefaultState());
+										event.getChunk().setBlockState(pos, Blocks.DIRT.getDefaultState());
 									else
-										event.getChunk().setBlockState(pos, Blocks.air.getDefaultState());
+										event.getChunk().setBlockState(pos, Blocks.AIR.getDefaultState());
 								}
 							}
 						}

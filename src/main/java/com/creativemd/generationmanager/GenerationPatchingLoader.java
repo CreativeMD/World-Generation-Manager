@@ -6,7 +6,6 @@ import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
-@MCVersion(value = "1.9")
 public class GenerationPatchingLoader implements IFMLLoadingPlugin {
 	
 	public static File location;
