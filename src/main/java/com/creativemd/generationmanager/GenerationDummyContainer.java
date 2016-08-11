@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.creativemd.generationmanager.config.WorldConfig;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -209,6 +210,8 @@ public class GenerationDummyContainer extends DummyModContainer {
 	@Subscribe
 	public void init(FMLInitializationEvent evt) {
 		MinecraftForge.EVENT_BUS.register(new ChunkHandler());
+		if(Loader.isModLoaded("ingameconfigmanager"))
+			WorldConfig.startConfig();
 		
 		//GameRegistry.registerWorldGenerator(new WorldTestGenerator(), 0);
 	}
