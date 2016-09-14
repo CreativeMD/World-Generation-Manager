@@ -1,7 +1,7 @@
 package com.creativemd.generationmanager.config;
 
-import com.creativemd.ingameconfigmanager.api.core.TabRegistry;
-import com.creativemd.ingameconfigmanager.api.tab.ModTab;
+import com.creativemd.igcm.api.core.TabRegistry;
+import com.creativemd.igcm.api.tab.ModTab;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

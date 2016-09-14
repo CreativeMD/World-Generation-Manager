@@ -3,10 +3,10 @@ package com.creativemd.generationmanager.config;
 import com.creativemd.creativecore.client.avatar.Avatar;
 import com.creativemd.creativecore.client.avatar.AvatarItemStack;
 import com.creativemd.generationmanager.GenerationDummyContainer;
-import com.creativemd.ingameconfigmanager.api.common.branch.ConfigBranch;
-import com.creativemd.ingameconfigmanager.api.common.branch.ConfigSegmentCollection;
-import com.creativemd.ingameconfigmanager.api.common.segment.BooleanSegment;
-import com.creativemd.ingameconfigmanager.api.common.segment.SelectSegment;
+import com.creativemd.igcm.api.common.branch.ConfigBranch;
+import com.creativemd.igcm.api.common.branch.ConfigSegmentCollection;
+import com.creativemd.igcm.api.common.segment.BooleanSegment;
+import com.creativemd.igcm.api.common.segment.SelectSegment;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
