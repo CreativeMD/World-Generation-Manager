@@ -3,6 +3,8 @@ package com.creativemd.generationmanager;
 import java.io.File;
 import java.util.Map;
 
+import com.creativemd.creativecore.transformer.TransformerNames;
+
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
@@ -28,6 +30,7 @@ public class GenerationPatchingLoader implements IFMLLoadingPlugin {
 	@Override
 	public void injectData(Map<String, Object> data) {
 		location = (File) data.get("coremodLocation");
+		TransformerNames.obfuscated = (boolean) data.get("runtimeDeobfuscationEnabled");
 	}
 
 	@Override

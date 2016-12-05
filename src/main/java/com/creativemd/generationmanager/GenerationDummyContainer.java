@@ -34,7 +34,7 @@ public class GenerationDummyContainer extends DummyModContainer {
 		ModMetadata meta = getMetadata();
 		meta.modId = "generationmanager";
 		meta.name = "Generation Manager";
-		meta.version = "0.4.4";
+		meta.version = "0.4.7";
 		meta.credits = "CreativeMD";
 		meta.authorList = Arrays.asList("CreativeMD");
 		meta.description = "";
